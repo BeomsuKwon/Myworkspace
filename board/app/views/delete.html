@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <span>1. 사용자</span><input id="userid" type="text"><br>
+        <span>2. 암호</span><input id="userpassword" type="text"><br>
+        <span>3. </span><button type="button" onclick="deleteUser()">삭제하기</button>
+    </div>
+
+<script>
+    function deleteUser(){
+        $.ajax({
+            url: 'deleteUser',
+            method: 'post',
+            dataType: 'json',
+            data: {
+                userid:     $('#userid').val(),
+                password:   $('#userpassword').val()
+            },
+            success: (data)=>{
+                alert("삭제되었습니다.");
+            },
+            error: (err)=>{
+                alert(err.responseText);
+            }
+        });
+    }
+</script>
+</body>
+</html>

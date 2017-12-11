@@ -1,0 +1,26 @@
+create table users(
+no int(30) unsigned auto_increment primary key,
+id varchar(50) not null unique key,
+password varchar(50) not null);
+
+create table rooms(
+no int(30) unsigned auto_increment primary key,
+name varchar(50) not null,
+date datetime default current_timestamp);
+
+create table user_admissions(
+no int(30) unsigned auto_increment primary key,
+user_no int(30) unsigned not null,
+room_no int(30) unsigned not null,
+status int(10) unsigned default 1,
+foreign key (user_no) references users(no) on update cascade on delete cascade,
+foreign key (room_no) references rooms(no) on update cascade on delete cascade);
+
+create table chat_logs(
+no int(30) unsigned auto_increment primary key,
+user_no int(30) unsigned not null,
+room_no int(30) unsigned not null,
+content varchar(100) not null,
+date datetime default current_timestamp,
+foreign key (user_no) references users(no) on update cascade on delete cascade,
+foreign key (room_no) references rooms(no) on update cascade on delete cascade);

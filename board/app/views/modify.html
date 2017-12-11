@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js">
+    </script>
+    <title>Document</title>
+</head>
+<body>
+    <p>수정할 ID를 입력하세요</p>
+    ID:<input id="searchid" type="text"><button onclick="userSearch()">사용자 정보 조회</button>
+    <br><br>
+    <div>
+        <span>1. 사용자 ID</span> <input id="userid" type="text"><br>
+        <span>2. 이름</span> <input id="username" type="text"><br>
+        <span>3. 암호</span> <input id="userpassword" type="password"><br>
+        <span>4. 구분</span> <select id="classification">
+            <option value="student">학생</option>
+            <option value="staff">교사</option>
+            </select><br>
+        <span>5. 성별</span> <select id="gender">
+                <option value="male" selected>남자</option>
+                <option value="female">여자</option>
+                </select><br>
+        <span>6. 전화번호</span> <input id="phone" type="text"><br>
+        <span>7. 이메일</span> <input id="email" type="text"><br>
+        <span>8.</span><button onclick="modifyUser()">수정하기</button><br>
+    </div>
+<script>
+function userSearch(){
+    $.ajax({
+        url: './SearchUser.php',
+        method: 'post',
+        dataType: 'json',
+        data: {
+            userid: $('#searchid').val()
+        },
+        success: (data)=>{
+            if(data == null) {
+                alert('ID를 찾을 수 없습니다.');
+            } else {
+                $('#userid').val(data.userid);
+                $('#username').val(data.name);
+                $('#userpassword').val(data.password);
+                $('#classification').map((index, elem)=>{
+                    $(elem).find('option').map((index, elem)=>{
+                        $('#classification').val(data.classification);
+                    })
+                });
+                $('#gender').map((index, elem)=>{
+                    $(elem).find('option').map((index, elem)=>{
+                        $('#gender').val(data.gender);
+                    })
+                });
+                $('#phone').val(data.phone);
+                $('#email').val(data.email);
+            }
+        },
+        error: ()=>{
+            alert('ID를 찾을 수 없습니다.');
+        }
+    });
+}
+function modifyUser(){
+    let classification;
+    if($('#classification').val() == "학생")
+        classification = "student";
+    else if($('#classification').val() == "교사")
+        classification = "staff";
+
+    let gender;
+    if($('#gender').val() == "남자")
+        gender = "male";
+    else if($('#gender').val() == "여자")
+        gender = "female";
+        
+    $.ajax({
+        url: './modifyUser.php',
+        method: 'post',
+        dataType: 'json',
+        data: {
+            searchid:       $('#searchid').val(),
+            userid:         $('#userid').val(),
+            username:       $('#username').val(),
+            userpassword:   $('#userpassword').val(),
+            classification: $('#classification').val(),
+            gender:         $('#gender').val(),
+            phone:          $('#phone').val(),
+            email:          $('#email').val(),
+        },
+        success: (data)=>{
+            alert("수정을 완료했습니다.");
+            window.location = "./";
+        },
+        error: (err)=>{
+            alert("아래 항목은 필수항목입니다.");
+        }
+    });
+}
+</script>
+</body>
+</html>

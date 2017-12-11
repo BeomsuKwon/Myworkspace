@@ -1,0 +1,86 @@
+<?php
+session_start();
+const HOST = 'garaage';
+const USER = 'root';
+const PASSWORD = 'garaage';
+const DATABASE = 'garaage';
+
+// db 연결
+class db{
+    private $con;
+    function __construct(){
+        $this->con = mysqli_connect(HOST, USER, PASSWORD, DATABASE);
+    }
+    function select() {
+        $sql = "";
+    }
+}
+
+?>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>PPOMI</title>
+    <!-- 합쳐지고 최소화된 최신 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <!-- 부가적인 테마 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head><body style="background-color: lightcyan">
+<?php if (!isset($_SESSION['id'])) { ?>
+<div class="container" style="width: 300px">
+
+    <form class="form-signin" action="login.php" method="post">
+        <h2 class="form-signin-heading">Login</h2>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="text" id="inputEmail" name="id" class="form-control" placeholder="ID" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" name="passwd" class="form-control" placeholder="Password" required>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+
+</div> <!-- /container -->
+<?php } else { ?>
+
+    <center><h1>가라아게 팀의 PPOMI 프로젝트</h1></center><br><br>
+    <table style="text-align: center; margin: auto; width: 600px" class="table table-hover">
+        <tr>
+            <td style="width: 100px;"><b>부위</b></td>
+            <td style="width: 200px;"><b>누적횟수</b></td>
+            <td style="width: 300px;"><b>날짜</b></td>
+        </tr>
+        <tr>
+            <td>머리</td>
+            <td>21</td>
+            <td>2017-11-04</td>
+        </tr>
+        <tr>
+            <td>가슴</td>
+            <td>6</td>
+            <td>2017-11-04</td>
+        </tr>
+        <tr>
+            <td>손</td>
+            <td>29</td>
+            <td>2017-11-04</td>
+        </tr>
+        <tr>
+            <td>발</td>
+            <td>21</td>
+            <td>2017-11-04</td>
+        </tr>
+    </table>
+
+    <center><a href="login.php"><button class="btn btn-default">logout</button></a></center>
+
+<?php } ?>
+</body>
+</html>

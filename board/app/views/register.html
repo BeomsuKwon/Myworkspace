@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <meta charset="UTF-8">
+    <title>사용자 등록</title>
+</head>
+<body>
+<!--사용자 입력 -->
+<?php
+$userid = isset($_POST['userid']) ? $_POST['userid'] : null;
+$username = isset($_POST['username']) ? $_POST['username'] : null;
+$userpassword = isset($_POST['userpassword']) ? $_POST['userpassword'] : null;
+$classification = isset($_POST['classification']) ? $_POST['classification'] : null;
+$gender = isset($_POST['gender']) ? $_POST['gender'] : null;
+$phone = isset($_POST['phone']) ? $_POST['phone'] : null;
+$email = isset($_POST['email']) ? $_POST['email'] : null;
+?>
+<div>
+    <p id="errorMsgBox"></p>
+    <b>사용자 정보 등록</b><br>
+    <ol>
+        <li>사용자 ID: <input type="text" name="userid" value="<?php echo $userid ?>"></li>
+        <li>이름: <input type="text" name="username" value="<?php echo $username ?>"></li>
+        <li>암호: <input type="password" name="userpassword" value="<?php echo $userpassword?>"></li>
+        <li>구분: <select name="classification">
+                    <option value="staff" <?php if($classification == "staff") echo "selected" ?>>교직원</option>
+                    <option value="student" <?php if($classification == "student") echo "selected" ?>>학생</option>
+                    </select></li>
+        <li>성별: <select name="gender">
+                    <option value="male" <?php if($gender == "male") echo "selected" ?>>남성</option>
+                    <option value="female" <?php if($gender == "female") echo "selected" ?>>여성</option>
+                    </select></li>
+        <li>전화번호: <input type="text" name="phone" value="<?php echo $phone ?>"></li>
+        <li>이메일: <input type="text" name="email" value="<?php echo $email?>"></li>
+    </ol>
+    <input type="button" value="등록하기" onclick="userRegisteration()">
+</div>
+<script>
+    function userRegisteration(){
+        $.ajax({
+            url: 'registrationProcessing',
+            method: 'post',
+            dataType: 'json',
+            data: {
+                userid: $("input[name='userid']").val(),
+                username: $("input[name='username']").val(),
+                userpassword: $("input[name='userpassword']").val(),
+                classification: $("select[name='classification']").val(),
+                gender: $("select[name='gender']").val(),
+                phone: $("input[name='phone']").val(),
+                email: $("input[name='email']").val(),
+            },
+            success: data => {
+                $('#errorMsgBox').empty();
+                for(let val in data){
+                    if(val == "message"){
+                        if(data[val] == "유저 등록 성공"){
+                            alert(data[val]);
+                            window.location = "/board";
+                        }
+                        $('#errorMsgBox').append("<br>" + data[val]);
+                    } else if(data[val] == "") {
+                        $('#errorMsgBox').append(val + " ");
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Apache Server 설정 파일
+# MVC를 위한 라우팅 기능 구현
+Options -MultiViews
+RewriteEngine On
+Options -indexes
+RewriteCond ${REQUEST_FILENAME} !-d
+RewriteCond ${REQUEST_FILENAME} !-f
+RewriteCond ${REQUEST_FILENAME} !-l
+RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]

@@ -1,0 +1,49 @@
+<?php 
+//require("../models/model_chatting_system.php");
+
+//new ChattingSystemModel();
+?>
+<!DOCTYPE html>
+<html lang="ko-kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>채팅방</title>
+</head>
+<body onbeforeunload="wow()">
+    <iframe id="chatting_list" src="chatting_list.php" frameborder="1" width="500px" height="500px"></iframe>
+    <br />
+    <form id="form" onsubmit="return false;">
+        <input id="content" type="text" placeholder="글을 입력해주세요"><input id="submit" type="submit" onclick="submitContent()" value="글 작성">
+    </form>
+    <button onclick="location.href = './roomList.html'">채팅방 나가기</button>
+<script> 
+flag = null;
+function submitContent(){
+    var ajax = new XMLHttpRequest();
+    let content = document.getElementById("content").value;
+
+    ajax.onreadystatechange = function() {
+        if(ajax.readyState == 4 && ajax.status == 200){
+            refreshChats();
+            document.getElementById("content").value = "";
+            var chat_list = document.getElementById("chatting_list").contentDocument;
+            chat_list.body.scrollTop = chat_list.body.scrollHeight;
+        }
+    };
+    ajax.open("POST", "chatting_list.php", true);
+    ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    ajax.send("content=" + content);
+}
+
+function refreshChats(){
+    document.getElementById("chatting_list").contentDocument.location.reload();
+}
+function wow(){
+    location.href = "./roomList.php"
+}
+setInterval("refreshChats()", 1000);
+</script>
+</body>
+</html>

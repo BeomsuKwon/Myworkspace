@@ -1,0 +1,36 @@
+<?php require("./roomList.php");?>
+<!DOCTYPE html>
+<html lang="ko-kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>채팅방 목록</title>
+    <style>
+        td{
+            border: 1px solid black;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+<table>
+<?php
+if(isset($room_list)){
+    foreach($room_list as $record_no => $room){
+        echo "<tr>";
+        foreach($room as $key => $value){
+            echo "<td>$key : $value</td>";
+        }
+        echo "<td><a href='./joinRoom.php?room_no={$room['방 번호']}'>입장</a></td>";
+        echo "</tr>";
+    }
+}
+?>
+</table>
+<button onclick="location.href='openRoom.html'">방 만들기</button>
+<script>
+
+</script>
+</body>
+</html>
