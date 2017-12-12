@@ -6,29 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>채팅방 목록</title>
-    <style>
-        td{
-            border: 1px solid black;
-            width: 200px;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-<table>
 <?php
-if(isset($room_list)){
-    foreach($room_list as $record_no => $room){
-        echo "<tr>";
-        foreach($room as $key => $value){
-            echo "<td>$key : $value</td>";
-        }
-        echo "<td><a href='./joinRoom.php?room_no={$room['방 번호']}'>입장</a></td>";
-        echo "</tr>";
-    }
-}
-?>
-</table>
-<button onclick="location.href='openRoom.html'">방 만들기</button>
+if(isset($room_list)){?>
+<?php   foreach($room_list as $record_no => $room){
+    echo "
+    <ul class='collection'>
+        <li class='collection-item avatar'>
+            <span class='title'>{$room['방 제목']}</span>
+            <p>방장 : {$room['방장']}<br>
+                참여 인원 {$room['참여 인원']}
+            </p>
+            <a href='./joinRoom.php?room_no={$room['방 번호']}' class='secondary-content'><i class='material-icons'>send</i></a>
+        </li>
+    </ul>
+    ";
+}?>
+<?php } ?>
+<div class='row'>
+    <ul class='pagination col s9 offset-s1'>
+        <li class='<?php echo ($block - $perPage) >= 0 ? "waves-effect" : "disabled";?>'><a href='./roomList.html?pageIndex=<?php echo ($block - $perPage) >= 0 ? $block - $perPage : 0;?>'><i class='material-icons'>chevron_left</i></a></li>
+<?php   for($i = 0; $i < 5; $i++){?>
+        <li class='<?php echo ($pageIndex + $i < $max) ? "waves-effect" : "disabled";?>'><a href='./roomList.html?pageIndex=<?php echo ($pageIndex + $i < $max) ? $block + $i : "#";?>'><?php echo $block + $i + 1;?></a></li>
+<?php   }?>
+        <li class='<?php echo ($block <= $max_block) ? "waves-effect" : "disabled";?>'><a href='./roomList.html?pageIndex=<?php echo ($block <= $max_block) ? $block : $max_block;?>'><i class='material-icons'>chevron_right</i></a></li>
+    </ul>
+    <button class="col s2 waves-effect waves-light btn" onclick="location.href='openRoom.html'">방 만들기</button>
+</div>
 <script>
 
 </script>

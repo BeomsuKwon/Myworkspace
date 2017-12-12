@@ -7,6 +7,12 @@ class ChattingSystemModel{
 
     function __construct(){
         session_start();
+        if($_SERVER['REQUEST_URI'] != "/chatting_system/joinRoom.html"
+        || $_SERVER['REQUEST_URI'] != "/chatting_system/chatting_list.php"){
+            if(isset($_SESSION['room_no'])){
+                // echo "<script>location.href='./joinRoom.html'</script>";
+            }
+        }
         $this->connection = Model::get_connection(self::DATABASE);
     }
 
@@ -20,6 +26,9 @@ class ChattingSystemModel{
         $user_id = filter_var($user_id, FILTER_SANITIZE_STRIPPED);
         $user_password = filter_var($user_password, FILTER_SANITIZE_STRIPPED);
 
+        if($user_id == "" || $user_password == ""){
+            echo "<script>alert('아이디와 비밀번호를 모두 입력해주세요.');location.href='./login.html';</script>";
+        }
         @$res = $this->connection
         ->query("INSERT INTO users(id, password)
                  SELECT '$user_id', SHA2('$user_password', 224)
@@ -41,7 +50,7 @@ class ChattingSystemModel{
         ->fetch_array(MYSQLI_ASSOC)['no'];
 
         if(!$res){
-            echo "<script>alert('Failed to Login');</script>";
+            echo "<script>alert('로그인 실패');</script>";
             return false;
         } else {
             $_SESSION['user_no'] = $res;
@@ -51,18 +60,27 @@ class ChattingSystemModel{
 
     function get_room_list($pageIndex = 0, $perPage = 0){
         unset($_SESSION['room_no']);
+        $index = $pageIndex * $perPage;
         $res = $this->connection
-        ->query("SELECT r.no '방 번호', r.name '방 제목', u.id 방장, COUNT(*) num
+        ->query("SELECT r.no '방 번호', r.name '방 제목', u.id 방장, COUNT(*) '참여 인원'
                  FROM users u, rooms r, user_admissions uad 
                  WHERE u.no = uad.user_no 
                  AND r.no = uad.room_no
-                 GROUP BY '방 번호'")
+                 GROUP BY '방 번호'
+                 LIMIT $index, $perPage")
         ->fetch_all(MYSQLI_ASSOC);
         if($res){
             return $res;
         }
     }
 
+    function get_room_num($perPage){
+        $max = $this->connection
+        ->query("SELECT COUNT(*) max
+                 FROM rooms")
+        ->fetch_array(MYSQLI_ASSOC)['max'];
+        return $max;
+    }
     function open_room($user_no, $room_name){
         $room_name = filter_var($room_name, FILTER_SANITIZE_STRIPPED);
         $res = $this->connection
